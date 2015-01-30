@@ -49,6 +49,18 @@ public class Spacecraft extends VectorSprite
             }
         }
         
+        upgrades[0][1] = 0;
+        upgrades[0][2] = 0;
+        upgrades[0][0] = 0;
+        
+        upgrades[1][1] = 0;
+        upgrades[1][2] = 0;
+        upgrades[1][0] = 0;
+        
+        upgrades[2][1] = 0;
+        upgrades[2][2] = 0;
+        upgrades[2][0] = 0;
+        
         active = true;
     }
         
@@ -103,26 +115,11 @@ public class Spacecraft extends VectorSprite
     
     public void checkWeapon()
     {
-        
-        // TEMPORARY DEBUGGING UPGRADE MODIFIER; WILL BE REMOVED //
-        
-        upgrades[0][1] = 5;
-        upgrades[0][2] = 5;
-        upgrades[0][0] = 1;
-        
-        upgrades[1][1] = 5;
-        upgrades[1][2] = 5;
-        upgrades[1][0] = 1;
-        
-        upgrades[2][1] = 5;
-        upgrades[2][2] = 5;
-        upgrades[2][0] = 1;
-        
         // Changes the attributes of the ship's gun based on which weapon is selected
         
         if (weaponType == 1) //Spread-shot gun
         {
-            fireDelay = 22 - 3*upgrades[0][1];
+            fireDelay = 42 - 4*upgrades[0][1];
             damage = 3 + 3*upgrades[0][2];
         }
         
