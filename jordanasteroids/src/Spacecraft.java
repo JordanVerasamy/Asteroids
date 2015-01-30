@@ -106,16 +106,16 @@ public class Spacecraft extends VectorSprite
         
         // TEMPORARY DEBUGGING UPGRADE MODIFIER; WILL BE REMOVED //
         
-        upgrades[0][1] = 2;
-        upgrades[0][2] = 4;
+        upgrades[0][1] = 5;
+        upgrades[0][2] = 5;
         upgrades[0][0] = 1;
         
-        upgrades[1][1] = 0;
+        upgrades[1][1] = 5;
         upgrades[1][2] = 5;
         upgrades[1][0] = 1;
         
-        upgrades[2][1] = 1;
-        upgrades[2][2] = 3;
+        upgrades[2][1] = 5;
+        upgrades[2][2] = 5;
         upgrades[2][0] = 1;
         
         // Changes the attributes of the ship's gun based on which weapon is selected

@@ -99,7 +99,7 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
     int bulletDeathCounter;
     Boolean[][] starPositions = new Boolean[900][600];
     int starPositionSeed;
-    boolean upKey, leftKey, rightKey, spaceKey, shiftKey, SKey, DKey, PKey, FKey, escKey;
+    boolean upKey, leftKey, rightKey, spaceKey, shiftKey, SKey, DKey, PKey, FKey, escKey, RKey;
     boolean isExplosionShip;
     boolean isMainInstr = false, instrSwitched = false;
     boolean pauseKeyActivated = false;
@@ -259,6 +259,11 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         if (e.getKeyCode() == KeyEvent.VK_F) {
             FKey = true;
         }
+        
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            RKey = true;
+        }
+        
     }
     
     public void keyReleased(KeyEvent e) {
@@ -306,6 +311,10 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         
         if (e.getKeyCode() == KeyEvent.VK_F) {
             FKey = false;
+        }
+        
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            RKey = false;
         }
         
     }
@@ -441,6 +450,14 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         if (gameState == 0 && DKey == true && instrSwitched == false) {
             isMainInstr = !isMainInstr;
             instrSwitched = true;
+        }
+        
+        if (RKey == true && gameState == 1)
+        {
+            for (Asteroid a : asteroidList)
+            {
+                a.active = false;
+            }
         }
     }
     
@@ -699,206 +716,20 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         
         offg.setColor(Color.YELLOW);
         
-        offg.drawString("DE-82 Disruptor", 100, 180);
-        offg.drawString("DAMAGE: ", 100, 200);
-        offg.drawString("RATE OF FIRE: ", 100, 220);
+        offg.drawString("DE-82 DISRUPTOR", 290, 140);
+        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[0][1] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[0][1])) + " credits to upgrade.", 300, 170);
+        offg.drawString("Damage upgrades: " + ship.upgrades[0][2] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[0][2])) + " credits to upgrade.", 300, 190);
+        offg.drawString("Quintuple Shot: " + (ship.upgrades[0][0] == 0 ? "- Pay 3000 credits to upgrade." : "Already upgraded!"), 300, 210);
         
-        for (int i = 0; i < 5; i++)
-        {
-            if (i < ship.upgrades[0][1])
-            {
-                offg.fillOval(10*i + 200, 190, 9, 9);
-            }
-            else
-            {
-                offg.drawOval(10*i + 200, 190, 8, 8);
-            }
-        }
+        offg.drawString("Z-850 VULCAN", 290, 240);
+        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[1][1] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][1])) + " credits to upgrade.", 300, 270);
+        offg.drawString("Damage upgrades: " + ship.upgrades[1][2] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][2])) + " credits to upgrade.", 300, 290);
+        offg.drawString("Twin Barrels: " + (ship.upgrades[1][0] == 0 ? "- Pay 3000 credits to upgrade." : "Already upgraded!"), 300, 310);
         
-        if (shopSelection == 2)
-            offg.setColor(Color.WHITE);
-        else
-            offg.setColor(Color.YELLOW);
-        
-        offg.fillRect(255, 213, 12, 2);
-        offg.fillRect(260, 208, 2, 12);
-        offg.drawString("UPGRADE", 275, 220);
-        
-        if (shopSelection == 5)
-            offg.setColor(Color.WHITE);
-        else
-            offg.setColor(Color.YELLOW);
-        
-        offg.fillRect(260, 388, 2, 12);
-        offg.fillRect(255, 393, 12, 2);
-        offg.drawString("UPGRADE", 275, 400);
-        
-        if (shopSelection == 6)
-            offg.setColor(Color.WHITE);
-        else
-            offg.setColor(Color.YELLOW);
-        
-        offg.fillRect(255, 413, 12, 2);
-        offg.fillRect(260, 408, 2, 12);
-        offg.drawString("UPGRADE", 275, 420);
-        
-        if (shopSelection == 4)
-            offg.setColor(Color.WHITE);
-        else
-            offg.setColor(Color.YELLOW);
-        
-        offg.fillRect(255, 313, 12, 2);
-        offg.fillRect(260, 308, 2, 12);
-        offg.drawString("UPGRADE", 275, 320);
-        
-        if (shopSelection == 3)
-            offg.setColor(Color.WHITE);
-        else
-            offg.setColor(Color.YELLOW);
-        
-        offg.fillRect(260, 288, 2, 12);
-        offg.fillRect(255, 293, 12, 2);
-        offg.drawString("UPGRADE", 275, 300);
-        
-        if (shopSelection == 1)
-            offg.setColor(Color.WHITE);
-        else
-            offg.setColor(Color.YELLOW);
-        
-        offg.fillRect(260, 188, 2, 12);
-        offg.fillRect(255, 193, 12, 2);
-        offg.drawString("UPGRADE", 275, 200);
-        
-        offg.setColor(Color.YELLOW);
-        
-        
-        for (int i = 0; i < 5; i++)
-        {
-            if (i < ship.upgrades[0][2])
-            {
-                offg.fillOval(10*i + 200, 210, 9, 9);
-            }
-            else
-            {
-                offg.drawOval(10*i + 200, 210, 8, 8);
-            }
-        }
-        
-        offg.drawString("Z-850 Vulcan", 100, 280);
-        offg.drawString("DAMAGE: ", 100, 300);
-        offg.drawString("RATE OF FIRE: ", 100, 320);
-        
-        for (int i = 0; i < 5; i++)
-        {
-            if (i < ship.upgrades[1][1])
-            {
-                offg.fillOval(10*i + 200, 290, 9, 9);
-            }
-            else
-            {
-                offg.drawOval(10*i + 200, 290, 8, 8);
-            }
-        }
-        
-        if (shopSelection == 3)
-        {
-            offg.setColor(Color.WHITE);
-            
-            offg.fillRect(260, 288, 2, 12);
-            offg.fillRect(255, 293, 12, 2);
-            offg.drawString("UPGRADE", 275, 300);
-            
-            offg.setColor(Color.YELLOW);
-            
-            offg.fillRect(255, 313, 12, 2);
-            offg.fillRect(260, 308, 2, 12);
-            offg.drawString("UPGRADE", 275, 320);
-        }
-        
-        if (shopSelection == 4)
-        {
-            offg.setColor(Color.YELLOW);
-            
-            offg.fillRect(260, 288, 2, 12);
-            offg.fillRect(255, 293, 12, 2);
-            offg.drawString("UPGRADE", 275, 300);
-            
-            offg.setColor(Color.WHITE);
-            
-            offg.fillRect(255, 313, 12, 2);
-            offg.fillRect(260, 308, 2, 12);
-            offg.drawString("UPGRADE", 275, 320);
-        }
-        
-        for (int i = 0; i < 5; i++)
-        {
-            if (i < ship.upgrades[1][2])
-            {
-                offg.fillOval(10*i + 200, 310, 9, 9);
-            }
-            else
-            {
-                offg.drawOval(10*i + 200, 310, 8, 8);
-            }
-        }
-        
-        offg.drawString("C-86 Ion Cannon", 100, 380);
-        offg.drawString("DAMAGE: ", 100, 400);
-        offg.drawString("RATE OF FIRE: ", 100, 420);
-        
-        for (int i = 0; i < 5; i++)
-        {
-            if (i < ship.upgrades[2][1])
-            {
-                offg.fillOval(10*i + 200, 390, 9, 9);
-            }
-            else
-            {
-                offg.drawOval(10*i + 200, 390, 8, 8);
-            }
-        }
-        
-        if (shopSelection == 5)
-        {
-            offg.setColor(Color.WHITE);
-            
-            offg.fillRect(260, 388, 2, 12);
-            offg.fillRect(255, 393, 12, 2);
-            offg.drawString("UPGRADE", 275, 400);
-            
-            offg.setColor(Color.YELLOW);
-            
-            offg.fillRect(255, 413, 12, 2);
-            offg.fillRect(260, 408, 2, 12);
-            offg.drawString("UPGRADE", 275, 420);
-        }
-        
-        if (shopSelection == 6)
-        {
-            offg.setColor(Color.YELLOW);
-            
-            offg.fillRect(260, 388, 2, 12);
-            offg.fillRect(255, 393, 12, 2);
-            offg.drawString("UPGRADE", 275, 400);
-            
-            offg.setColor(Color.WHITE);
-            
-            offg.fillRect(255, 413, 12, 2);
-            offg.fillRect(260, 408, 2, 12);
-            offg.drawString("UPGRADE", 275, 420);
-        }
-        
-        for (int i = 0; i < 5; i++)
-        {
-            if (i < ship.upgrades[2][2])
-            {
-                offg.fillOval(10*i + 200, 410, 9, 9);
-            }
-            else
-            {
-                offg.drawOval(10*i + 200, 410, 8, 8);
-            }
-        }
+        offg.drawString("DE-82 DISRUPTOR", 290, 340);
+        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[1][1] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][1])) + " credits to upgrade.", 300,370);
+        offg.drawString("Damage upgrades: " + ship.upgrades[1][2] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][2])) + " credits to upgrade.", 300, 390);
+        offg.drawString("Piercing Burst: " + (ship.upgrades[2][0] == 0 ? "- Pay 3000 credits to upgrade." : "Already upgraded!"), 300, 410);
     }
     
     public void whichBulletType() {
