@@ -1,15 +1,3 @@
-/***********************************************************************
-*                         PROGRAM HEADER                               * 
-************************************************************************
-* PROGRAMMER'S NAME:    Jordan Verasamy                                *                                                                    
-* DATE:                 Monday, January 21, 2012                       *                                                                   
-* PROGRAM NAME:         ASTEROIDS ISP                                  *                                                               
-* CLASS:                ICS-4U1                                        *                                                                                                                                                                      
-* TEACHER:              Mrs. Barsan                                    *                                                                     
-* DUE DATE:             Monday, January 21, 2012                       * 
-*                                                                      * 
-************************************************************************/
-
 import java.applet.Applet;
 import java.awt.*;
 
@@ -20,7 +8,7 @@ public class Asteroid extends VectorSprite
     
     public Asteroid()
     {
-        size = 5;
+        size = 7;
         initializeAsteroid();
     }
     
@@ -61,7 +49,7 @@ public class Asteroid extends VectorSprite
         drawShape.addPoint(-h,n);
         drawShape.addPoint(0,m);
         
-        health = 5 * (size - 2);
+        health = 3 * (size - 2);
         
         xposition = 450;
         yposition = 300;

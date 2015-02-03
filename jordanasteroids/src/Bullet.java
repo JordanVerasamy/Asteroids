@@ -1,15 +1,3 @@
-/***********************************************************************
-*                         PROGRAM HEADER                               * 
-************************************************************************
-* PROGRAMMER'S NAME:    Jordan Verasamy                                *                                                                    
-* DATE:                 Monday, January 21, 2012                       *                                                                   
-* PROGRAM NAME:         ASTEROIDS ISP                                  *                                                               
-* CLASS:                ICS-4U1                                        *                                                                                                                                                                      
-* TEACHER:              Mrs. Barsan                                    *                                                                     
-* DUE DATE:             Monday, January 21, 2012                       * 
-*                                                                      * 
-************************************************************************/
-
 import java.awt.Polygon;
 
 public class Bullet extends VectorSprite
