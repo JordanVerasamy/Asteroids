@@ -99,10 +99,12 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
     int bulletDeathCounter;
     Boolean[][] starPositions = new Boolean[900][600];
     int starPositionSeed;
-    boolean upKey, leftKey, rightKey, spaceKey, shiftKey, SKey, DKey, PKey, FKey, escKey, RKey;
+    boolean upKey, downKey, leftKey, rightKey, spaceKey, shiftKey, SKey, DKey, PKey, FKey, escKey, RKey;
     boolean isExplosionShip;
     boolean isMainInstr = false, instrSwitched = false;
     boolean pauseKeyActivated = false;
+    boolean selectionMoved;
+    boolean spaceKeyActivated;
     int gameState;
     DecimalFormat df = new DecimalFormat("#.##");
     
@@ -116,6 +118,8 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         
         ship = new Spacecraft();
         
+        shopSelection = 0;
+        
         offscreen = createImage(this.getWidth(), this.getHeight());
         offg = offscreen.getGraphics();
         
@@ -126,7 +130,8 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         numAsteroids = 4;
         numDebris = 20;
         
-        shopSelection = 5;
+        selectionMoved = false;
+        spaceKeyActivated = false;
         
         gameState = 0;
         // 0 = game main menu, 1 = game running, 2 = level complete, 3 = game over, 4 = paused
@@ -232,6 +237,10 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
             upKey = true;
         }
         
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            downKey = true;
+        }
+        
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             spaceKey = true;
         }
@@ -272,6 +281,12 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             upKey = false;
+            selectionMoved = false;
+        }
+        
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            downKey = false;
+            selectionMoved = false;
         }
         
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -284,6 +299,7 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             spaceKey = false;
+            spaceKeyActivated = false;
         }
         
         if (e.getKeyCode() == KeyEvent.VK_S) {
@@ -363,6 +379,7 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
             
         } else if (gameState == 2) {
             keyCheck();
+            ship.checkWeapon();
         } else if (gameState == 3) {
             keyCheck();
         } else if (gameState == 4) {
@@ -390,6 +407,17 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         
         if (upKey == true) {
             ship.accelerate();
+            if (gameState == 2 && selectionMoved == false)
+            {
+                shopSelection--;
+                selectionMoved = true;
+            }
+        }
+        
+        if (downKey == true && gameState == 2 && selectionMoved == false)
+        {
+            shopSelection++;
+            selectionMoved = true;
         }
         
         if (rightKey == true) {
@@ -401,11 +429,23 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
         }
         
         if (spaceKey == true) {
-            if (gameState == 1) {
+            if (gameState == 1)
+            {
                 fireBullet();
-            } else if (gameState == 3) {
+                //TODO: Remove this
+                credits+=1000;
+            }
+            else if (gameState == 3)
+            {
                 gameState = 0;
                 init();
+            }
+            else if (gameState == 2 && credits >= ship.upgradeCost[shopSelection / 3][(shopSelection+1) % 3] && spaceKeyActivated == false && 
+                    (((shopSelection+1) % 3 != 0) || (ship.upgrades[shopSelection / 3][(shopSelection+1) % 3] == 0))) 
+            {
+                ship.upgrades[shopSelection / 3][(shopSelection+1) % 3]++;
+                credits -= ship.upgradeCost[shopSelection / 3][(shopSelection+1) % 3];
+                spaceKeyActivated = true;
             }
             
         }
@@ -711,24 +751,55 @@ public class MainGame extends Applet implements KeyListener, ActionListener {
     }
     
     public void drawShop() {
+        
+        offg.setColor(Color.BLACK);
+        offg.fillRect(0, 0, 800, 600);
+        
+        try {
+            drawHUD();
+        }
+        catch(Exception e)
+        {};
+        
+        if (shopSelection > 8)
+        {
+            shopSelection = 0;
+        }
+        else if (shopSelection < 0)
+        {
+            shopSelection = 8;
+        }
+        
         offg.setColor(Color.CYAN);
         offg.drawString("Congrats, you completed level " + level + "! Press S to advance to the next level", 300, 100);
         
         offg.setColor(Color.YELLOW);
+        offg.drawString("Use the arrow keys and spacebar to select upgrades. Use the shift key to cycle through weapons and look at stats.", 120, 460);
         
         offg.drawString("DE-82 DISRUPTOR", 290, 140);
-        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[0][1] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[0][1])) + " credits to upgrade.", 300, 170);
-        offg.drawString("Damage upgrades: " + ship.upgrades[0][2] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[0][2])) + " credits to upgrade.", 300, 190);
+        if (shopSelection == 0) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
+        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[0][1] + " - Pay " + ship.upgradeCost[0][1] + " credits to upgrade.", 300, 170);
+        if (shopSelection == 1) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
+        offg.drawString("Damage upgrades: " + ship.upgrades[0][2] + " - Pay " + ship.upgradeCost[0][2] + " credits to upgrade.", 300, 190);
+        if (shopSelection == 2) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
         offg.drawString("Quintuple Shot: " + (ship.upgrades[0][0] == 0 ? "- Pay 3000 credits to upgrade." : "Already upgraded!"), 300, 210);
         
+        offg.setColor(Color.YELLOW);
         offg.drawString("Z-850 VULCAN", 290, 240);
-        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[1][1] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][1])) + " credits to upgrade.", 300, 270);
-        offg.drawString("Damage upgrades: " + ship.upgrades[1][2] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][2])) + " credits to upgrade.", 300, 290);
+        if (shopSelection == 3) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
+        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[1][1] + " - Pay " + ship.upgradeCost[1][1] + " credits to upgrade.", 300, 270);
+        if (shopSelection == 4) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
+        offg.drawString("Damage upgrades: " + ship.upgrades[1][2] + " - Pay " + ship.upgradeCost[1][2] + " credits to upgrade.", 300, 290);
+        if (shopSelection == 5) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
         offg.drawString("Twin Barrels: " + (ship.upgrades[1][0] == 0 ? "- Pay 3000 credits to upgrade." : "Already upgraded!"), 300, 310);
         
-        offg.drawString("DE-82 DISRUPTOR", 290, 340);
-        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[1][1] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][1])) + " credits to upgrade.", 300,370);
-        offg.drawString("Damage upgrades: " + ship.upgrades[1][2] + " - Pay " + (200 * (int)Math.pow(2, ship.upgrades[1][2])) + " credits to upgrade.", 300, 390);
+        offg.setColor(Color.YELLOW);
+        offg.drawString("C-86 ION CANNON", 290, 340);
+        if (shopSelection == 6) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
+        offg.drawString("Rate of Fire upgrades: " + ship.upgrades[2][1] + " - Pay " + ship.upgradeCost[2][1] + " credits to upgrade.", 300,370);
+        if (shopSelection == 7) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
+        offg.drawString("Damage upgrades: " + ship.upgrades[2][2] + " - Pay " + ship.upgradeCost[2][2] + " credits to upgrade.", 300, 390);
+        if (shopSelection == 8) {offg.setColor(Color.WHITE);} else {offg.setColor(Color.YELLOW);}
         offg.drawString("Piercing Burst: " + (ship.upgrades[2][0] == 0 ? "- Pay 3000 credits to upgrade." : "Already upgraded!"), 300, 410);
     }
     

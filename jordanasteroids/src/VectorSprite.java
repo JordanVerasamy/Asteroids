@@ -46,6 +46,7 @@ public class VectorSprite extends Applet
     boolean active;
     
     int[][] upgrades = new int [3][4]; // First slot tells which gun is being upgraded, second slot tells what is being upgraded
+    int [][] upgradeCost = new int [3][4];
     
     public VectorSprite()
     {

@@ -49,6 +49,8 @@ public class Spacecraft extends VectorSprite
             }
         }
         
+        //TODO: Remove this
+        
         upgrades[0][1] = 0;
         upgrades[0][2] = 0;
         upgrades[0][0] = 0;
@@ -134,6 +136,18 @@ public class Spacecraft extends VectorSprite
             fireDelay = 31 - 5*upgrades[2][1];
             damage = 10 + 8*upgrades[2][2];
         }
+        
+        upgradeCost[0][1] = 200 * (int)Math.pow(2, upgrades[0][1]);
+        upgradeCost[0][2] = 200 * (int)Math.pow(2, upgrades[0][2]);
+        upgradeCost[0][0] = 3000;
+        
+        upgradeCost[1][1] = 200 * (int)Math.pow(2, upgrades[1][1]);
+        upgradeCost[1][2] = 200 * (int)Math.pow(2, upgrades[1][2]);
+        upgradeCost[1][0] = 3000;
+        
+        upgradeCost[2][1] = 200 * (int)Math.pow(2, upgrades[2][1]);
+        upgradeCost[2][2] = 200 * (int)Math.pow(2, upgrades[2][2]);
+        upgradeCost[2][0] = 3000;
     }
     
     public void checkInvinc()
